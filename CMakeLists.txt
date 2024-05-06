@@ -14,7 +14,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
-include_directories(widgets)
+include_directories(
+    widgets
+    stream
+    )
 
 set(PROJECT_SOURCES
         main.cpp
@@ -23,6 +26,8 @@ set(PROJECT_SOURCES
         mainwindow.ui
         widgets/window.cpp
         widgets/window.hpp
+        stream/stream.cpp
+        stream/stream.hpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
