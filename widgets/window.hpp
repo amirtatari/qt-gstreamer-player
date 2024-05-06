@@ -3,17 +3,24 @@
 
 #include <QWidget>
 #include <QString>
+#include "../stream/stream.hpp"
+
+struct SrcParams 
+{
+    QString _host;
+    QString _user;
+    QString _password;
+};
 
 class Window : public QWidget
 {
     Q_OBJECT
+    Stream _stream;
+    SrcParams _params;
     QString _name;
-    QString _description;
-    WId _id;
+
 public:
     explicit Window(const QString& iName, QWidget* parent=nullptr);
-
-    void SetDescription(const QString& iDescription);
 
 public slots:
     void PlayStream();
