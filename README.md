@@ -18,7 +18,7 @@ sudo apt install pkg-config -y
 
 ### Qt6
 ``` shell
-sudo apt install qt6-base-dev qt6-tools-dev -y 
+sudo apt install qt6-base-dev qt6-tools-dev qt6-wayland -y 
 ```
 
 ### Gstreamer
