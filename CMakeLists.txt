@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 
 project(Qt-Gstreamer-Player VERSION 0.0.0.1)
 
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -11,10 +13,10 @@ find_package(Qt6 COMPONENTS Widgets REQUIRED)
 pkg_check_modules(GSTREAMER REQUIRED gstreamer-1.0)
 
 
+
 include_directories(
     ${GSTREAMER_INCLUDE_DIRS}
     ${Qt6Widgets_INCLUDE_DIRS}
-    widgets
     stream
     gst
     )
@@ -24,7 +26,6 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.hpp
         mainwindow.ui
-        widgets/window.cpp
         stream/stream.cpp
         gst/pipeline.cpp
 )
