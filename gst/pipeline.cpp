@@ -32,6 +32,10 @@ void Pipeline::CheckGstInit(){
 }
 
 Pipeline::~Pipeline(){
+    // deintialize the gstreamer
+    gst_deinit();
+
+    // release other elements
     if(_player != nullptr){
         g_object_unref(_player);
         _player = nullptr;
