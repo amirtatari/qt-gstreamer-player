@@ -7,25 +7,30 @@
 #include <QWidget>
 #include <iostream>
 
-class Pipeline {
+class Pipeline : public QWidget {
+    Q_OBJECT
+
     GstElement* _player;
     GstBus* _bus;
     GstMessage* _message;
     GError* _error;
-    GstStateChangeReturn _ret;
     static bool _inited;
 
+    // Initializes gstreamer
     void CheckGstInit();
 
 public:
     // CTOR
-    explicit Pipeline();
+    explicit Pipeline(QWidget* parentPtr = nullptr);
     
     // DTOR
     ~Pipeline();
 
     // Create elements and play pipeline
-    void Play(const std::string& description, WId windowId);
+    void Play(const QString& description);
+
+    // Stops the player and Cleans up the memory
+    void Stop();
 
 };
 

@@ -4,12 +4,12 @@
 
 bool Pipeline::_inited = false;
 
-Pipeline::Pipeline() :
+Pipeline::Pipeline(QWidget* parentPtr) :
+    QWidget{parentPtr},
     _player{nullptr}, 
     _bus{nullptr},
     _error{nullptr},
-    _message{nullptr},
-    _ret{GstStateChangeReturn::GST_STATE_CHANGE_NO_PREROLL}
+    _message{nullptr}
 {
     using std::cout, std::exception;
     try{
@@ -35,11 +35,12 @@ void Pipeline::CheckGstInit(){
 }
 
 
-Pipeline::~Pipeline(){
-    // deintialize the gstreamer
-    gst_deinit();
+void Pipeline::Stop(){
+    // top the pipeline from playing
+    GstStateChangeReturn ret = gst_element_set_state(_player, GST_STATE_PAUSED);
+    ret = gst_element_set_state(_player, GST_STATE_NULL);
 
-    // release other elements
+    // release memory from all elements
     if(_player != nullptr){
         g_object_unref(_player);
         _player = nullptr;
@@ -62,7 +63,16 @@ Pipeline::~Pipeline(){
 }
 
 
-void Pipeline::Play(const std::string& description, WId windowId){
+Pipeline::~Pipeline(){
+    // deintialize the gstreamer
+    gst_deinit();
+
+    // cleanup the memory
+    Stop();
+}
+
+
+void Pipeline::Play(const QString& description){
     using std::invalid_argument, std::cout;
 
     // check if gstreamer is initialized
@@ -71,33 +81,25 @@ void Pipeline::Play(const std::string& description, WId windowId){
     }
 
     // check the input variables
-    if(description.empty()){
+    if(description.isEmpty()){
         throw invalid_argument("Play: ERROR: description is empty!");    
     }
 
-    if(windowId == static_cast<unsigned long long>(0)){
-        throw invalid_argument("Play: ERROR: windowId is null!");
-    }
-
     // intialize the player element using the description
-    _player = gst_parse_launch(description.c_str(), &_error);
-
+    _player = gst_parse_launch(description.toStdString().c_str(), &_error);
     if(_player == nullptr){
         throw invalid_argument("Play: ERROR: could not parse the description!");
     }
 
-    // set video overlay
+    // get the sink element & set video overlay
     GstElement* video_sink = gst_bin_get_by_interface(GST_BIN(_player), GST_TYPE_VIDEO_OVERLAY);
-    gst_video_overlay_set_window_handle(GST_VIDEO_OVERLAY(video_sink), windowId);
+    gst_video_overlay_set_window_handle(GST_VIDEO_OVERLAY(video_sink), this->winId());
 
-    // change the player state and start playing the player
-    _ret = gst_element_set_state(_player, GST_STATE_READY);
-
-    _ret = gst_element_set_state(_player, GST_STATE_PLAYING);
+    GstStateChangeReturn ret = gst_element_set_state(_player, GST_STATE_PLAYING);
     
-    if(_ret == GST_STATE_CHANGE_FAILURE){
-        gst_element_set_state(_player, GST_STATE_NULL);
-        gst_object_unref(_player);
+    if(ret == GST_STATE_CHANGE_FAILURE){
+        // stop the player and free the memory
+        Stop();
         throw invalid_argument("Play: ERROR: could not play the pipeline!");
     }
 }
