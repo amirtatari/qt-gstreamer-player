@@ -13,7 +13,7 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
     Ui::MainWindow *ui;
-    Pipeline _pipeline;
+    Pipeline* _pipeline;
     
 public:
     MainWindow(QWidget *parent = nullptr);
