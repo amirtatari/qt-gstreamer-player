@@ -13,10 +13,13 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
     Ui::MainWindow *ui;
-
     Pipeline _pipeline;
+    
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow(); 
+
+    // play the stream in the widget
+    void PlayStream();
 };
 #endif // MAINWINDOW_HPP
