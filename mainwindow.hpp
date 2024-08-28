@@ -13,13 +13,21 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
     Ui::MainWindow *ui;
-    Pipeline* _pipeline;
+    Pipeline* _streamPipeline;
+
+    // setup Ui components for main ui page
+    void SetupMainPageUi();
+
+private slots:
+    // connecting start button released signal & play the stream in the widget
+    void SlotStartStream();
+
+    // connecting stop button released signal & stop the stream from playing
+    void SlotStopStream();
     
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow(); 
 
-    // play the stream in the widget
-    void PlayStream();
 };
 #endif // MAINWINDOW_HPP
