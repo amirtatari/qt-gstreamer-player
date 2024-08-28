@@ -36,9 +36,22 @@ void Pipeline::CheckGstInit(){
 
 
 void Pipeline::Stop(){
+    using std::cout;
+
+    // check if the player is not nullptr and return if it is
+    if(_player == nullptr){
+        return;
+    }
+
     // top the pipeline from playing
-    GstStateChangeReturn ret = gst_element_set_state(_player, GST_STATE_PAUSED);
-    ret = gst_element_set_state(_player, GST_STATE_NULL);
+    GstState state;
+    gst_element_get_state(_player, &state, nullptr, 500 * GST_MSECOND);
+
+    if (state == GstState::GST_STATE_PLAYING){
+        cout << "Stop: LOG: set player state to null.\n";
+        GstStateChangeReturn ret = gst_element_set_state(_player, GST_STATE_PAUSED);
+        ret = gst_element_set_state(_player, GST_STATE_NULL);
+    }
 
     // release memory from all elements
     if(_player != nullptr){
@@ -64,9 +77,6 @@ void Pipeline::Stop(){
 
 
 Pipeline::~Pipeline(){
-    // deintialize the gstreamer
-    gst_deinit();
-
     // cleanup the memory
     Stop();
 }
