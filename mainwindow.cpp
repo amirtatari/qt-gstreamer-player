@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <QString>
 #include <QPushButton>
+#include <QApplication>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -93,6 +94,7 @@ void MainWindow::setupButtonsUi(QVBoxLayout* vLayout)
     // connect released events of buttons to corresponding slots
     connect(start_btn, &QPushButton::released, this, &MainWindow::slotStartStream);
     connect(stop_btn, &QPushButton::released, this, &MainWindow::slotStopStream);
+    connect(quit_btn, &QPushButton::clicked, &QApplication::quit);
 }
 
 
